@@ -54,6 +54,10 @@ public class Room {
         allItemInRoom.add(newItem);
     }
 
+    public void removeItem(int index) {
+        allItemInRoom.remove(index);
+    }
+
     public ArrayList<Item> getAllItemInRoom() {
         return allItemInRoom;
     }
@@ -97,6 +101,12 @@ public class Room {
     // Used to print all items in the room into a narrative sentence.
     // EX: "warbanner, magnifing glass, blade." 
     public void printAllItems() {
+        
+        if(allItemInRoom.size() < 1) {
+            System.out.println("Nothing but disappointment.");
+            return;
+        }
+
         for(int i = 0; i < allItemInRoom.size()-1; i++) {
             System.out.print("\"" + allItemInRoom.get(i).getName() + "\", ");
         }
