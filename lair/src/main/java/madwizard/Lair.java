@@ -5,8 +5,31 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Hello world!
- *
+ * Project: (Single Dev): Escape the Mad Wizard's Lair
+ *  Story Development:
+ *      Create a storyline where the player is trapped in a mad wizard's lair and must find a way to escape.
+ *      Develop a series of rooms, challenges, and encounters that the player must navigate through.
+ *      Write descriptive text for each room, including details about the surroundings, objects, and any clues or hints.
+ *      Examples:
+ *          https://youtu.be/jAf1I1UWo5Q?t=103
+ *          https://www.lisperati.com/data.html
+ *  Game Mechanics:
+ *      Implement a system where players can make choices and perform actions in each room.
+ *      Choices can include examining objects, interacting with elements, or moving to different rooms.
+ *      Each choice should have consequences and lead to different outcomes or paths in the game.
+ *      Allow players to input their choices using the keyboard
+ *  Inventory System:
+ *      Implement an inventory system where players can collect and use items found in the wizard's lair.
+ *      Items can be used to solve puzzles, overcome obstacles, or gain access to new areas.
+ *      Allow players to combine items to create new objects or solutions.
+ *  Puzzle Solving:
+ *      Include a variety of puzzles and challenges throughout the game that players must solve to progress.
+ *      Puzzles can include riddles, logic problems, pattern recognition, or magical elements.
+ *      Solving puzzles should reward players with items, clues, or access to new rooms.
+ *  Game Progression:
+ *      Design a logical progression through the wizard's lair, with each room or area leading to the next.
+ *      Include multiple paths or optional areas that players can explore.
+ *      Implement a system to track the player's progress and determine when they have successfully escaped the lair.
  */
 public class Lair 
 {
@@ -63,46 +86,29 @@ public class Lair
         System.out.println("\nYou have entered the lair of the mad wizard who has caused pain and suffering\n" +
                            "throughout generations. A sense of dread begins to creep over you slowly as the\n" +
                            "smell of death overcomes you. You were sent on a mission to finally slay him\n" +
-                           "but can you? Your journey ends here ... one way or another. Find him.\n");
+                           "but can you? Your journey ends here ... one way or another. Find him.");
         
         initializeMap();
         Player user = new Player();
         Room current = map.get(0);
 
         while(true) {
-            System.out.println("\n" + current.getDescription());
-            System.out.println("\nI -> Inspect\nM -> Move\nQ -> Quit");
+            System.out.println("\nRoom Description:");
+            System.out.println(current.getDescription());
+            System.out.println("\nI -> Inspect Room\nM -> Move\nQ -> Quit");
             System.out.print("> ");
 
             String response = reader.nextLine().toLowerCase().strip();
             if(response.equals("i")) {
                 user.inspectRoom(current);
+
+                if(current.getAllItemInRoom().size() > 0) {
+                    user.inspectItem(current);
+
+                }
             }
             else if(response.equals("m")) {
-                System.out.println("\nN -> North\nE -> East\nS -> South\nW -> West");
-
-                while(true) {
-                    System.out.print("> ");
-                    response = reader.nextLine().toLowerCase().strip();
-                    if(response.equals("n")) {
-                        current = user.move(current, Direction.NORTH);
-                        break;
-                    }
-                    else if(response.equals("e")) {
-                        current = user.move(current, Direction.EAST);
-                        break;
-                    }
-                    else if(response.equals("s")) {
-                        current = user.move(current, Direction.SOUTH);
-                        break;
-                    }
-                    else if(response.equals("w")) {
-                        current = user.move(current, Direction.WEST);
-                        break;
-                    }
-                    else 
-                        System.out.println("Invalid response. Expecting 'N', 'E', 'S', 'W'.");
-                }
+                current = user.move(current);
             }
             else if(response.equals("q")){
                 System.out.println("\nFrom every wall in the room, you hear high-pitched chortling. \"The coward's way out, 'Hero'? I did not expect that.\"\n"+

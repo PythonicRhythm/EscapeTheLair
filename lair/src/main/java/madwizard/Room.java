@@ -94,11 +94,20 @@ public class Room {
         System.out.println("-------");
     }
 
-    public void printAllItem() {
+    // Used to print all items in the room into a narrative sentence.
+    // EX: "warbanner, magnifing glass, blade." 
+    public void printAllItems() {
         for(int i = 0; i < allItemInRoom.size()-1; i++) {
-            System.out.print(allItemInRoom.get(i).getName() + ", ");
+            System.out.print("\"" + allItemInRoom.get(i).getName() + "\", ");
         }
 
-        System.out.println(allItemInRoom.get(allItemInRoom.size()-1).getName() + ".");
+        System.out.println("\"" + allItemInRoom.get(allItemInRoom.size()-1).getName() + "\".");
+    }
+
+    // Used to print all items in the room into a list format.
+    public void listAllItems() {
+        for(int i = 0; i < allItemInRoom.size(); i++) {
+            System.out.println((i+1) + " -> " + allItemInRoom.get(i).getName());
+        }
     }
 }
