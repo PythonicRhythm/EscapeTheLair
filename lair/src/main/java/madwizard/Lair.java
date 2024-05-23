@@ -81,6 +81,29 @@ public class Lair
         map.add(current);
 
         next.setSouth(current);
+
+        {
+            Room room = new Room("You enter a dark stained room coated in a red slime. There appears to be damaged furniture stacked\n"+
+                                      "all over room. The blockage prevents any access to the room north and west of the room. On further\n"+
+                                      "inspection, you notice a disfigured body trapped in a pile of broken tables.");
+            room.addItem(new Item("Bloody Ripped Letter", "The letter contains the seal from the royal family in Epirus. The note reads \"\n"+
+                                                            "We have gotten word tha.... wizard appears to be suffe... from Lexia. This is\n"+
+                                                            "the opportune time to end his tyranny! Send ...... to his lair and finish this."));
+
+            next.setNorth(room);
+            room.setSouth(next);
+
+            Room blockedRoom = new Room("You enter what appears to be a art gallery filled with easels, brushes, and goblets filled with\n"+
+                                        "tainted water. There is a oddly strong smell of fresh paint coming from an easel in the corner.");
+            blockedRoom.addItem(new Item("Odd Easel", "You stare into the painting and you notice it's a perfect recreation of the entrance of the lair.\n"+
+                                                        "The painting begins to stutter and emanate a bright blue light. The colors on the easel begins to\n"+
+                                                        "swirl like a whirlpool and the door to the north shuts."));
+            
+            room.setEast(blockedRoom);
+            blockedRoom.setWest(room);
+        }
+
+        next.setNorth(next);
                 
         map.add(next);
         
