@@ -34,12 +34,18 @@ public class Player {
     
     // tryDirection() trys out a direction given by the player.
     // If its a valid move, return the room that the user requested,
-    // else it returns the room the player is currently in.
+    // and print a message mentioning the player's movement.
+    // else it returns the room the player is currently in and prints
+    // a message mentioning either a missing door or locked room.
     public Room tryDirection(Room start, Direction direction) {
         switch(direction) {
             case NORTH:
                 if(start.getNorth() == null) { 
                     System.out.println("No access to that direction.");
+                    return start;
+                }
+                else if(start.getNorth() instanceof LockedRoom) {
+                    System.out.println("The room is locked! Maybe there is a key?");
                     return start;
                 }
                 else {
@@ -51,6 +57,10 @@ public class Player {
                     System.out.println("No access to that direction.");
                     return start;
                 }
+                else if(start.getEast() instanceof LockedRoom) {
+                    System.out.println("The room is locked! Maybe there is a key?");
+                    return start;
+                }
                 else {
                     System.out.println("You proceed to the eastern room...");
                     return start.getEast();
@@ -60,6 +70,10 @@ public class Player {
                     System.out.println("No access to that direction.");
                     return start;
                 }
+                else if(start.getSouth() instanceof LockedRoom) {
+                    System.out.println("The room is locked! Maybe there is a key?");
+                    return start;
+                }
                 else {
                     System.out.println("You proceed to the southern room...");
                     return start.getSouth();
@@ -67,6 +81,10 @@ public class Player {
             case WEST:
                 if(start.getWest() == null) { 
                     System.out.println("No access to that direction.");
+                    return start;
+                }
+                else if(start.getWest() instanceof LockedRoom) {
+                    System.out.println("The room is locked! Maybe there is a key?");
                     return start;
                 }
                 else {
@@ -227,12 +245,48 @@ public class Player {
 
             System.out.println();
             System.out.println("Item Description:");
-            System.out.println(current.getAllItemInRoom().get(choice).getDescription());
-            grabItem(choice, current);
+            Item currItem = current.getAllItemInRoom().get(choice);
+            System.out.println(currItem.getDescription());
+            if(currItem instanceof Grabbable) {
+                grabItem(choice, current);
+            }
+            else if(currItem instanceof Interactable) {
+                interactWithItem(choice, current);
+            }
 
             if(current.getAllItemInRoom().size() < 1) return;
         }
 
+    }
+
+    // interactWithItem() asks if the player would like to 
+    // interact with the highlighted item in the current room.
+    // If so, the item causes an event in the room.
+    public void interactWithItem(int index, Room current) {
+
+        Scanner reader = new Scanner(System.in);
+        String response;
+        Item currentItem = current.getAllItemInRoom().get(index);
+
+        while(true) {
+            
+            System.out.println("\nInteract with \""+currentItem.getName()+"\"?");
+            System.out.println("I -> Interact");
+            System.out.println("C -> Cancel");
+            System.out.print("> ");
+
+            response = reader.nextLine().toLowerCase().strip();
+            if(response.equals("c")) return;
+            else if(response.equals("i")) {
+                ((Interactable) currentItem).interactedWith(current);
+                current.removeItem(index);
+                return;
+            }
+            else
+                System.out.println("Invalid Response. Expecting 'C' or 'G'.");
+        
+        }
+        
     }
 
     // grabItem() asks if the player would like to grab the
@@ -243,10 +297,11 @@ public class Player {
 
         Scanner reader = new Scanner(System.in);
         String response;
+        Item currentItem = current.getAllItemInRoom().get(index);
 
         while(true) {
             
-            System.out.println("\nGrab \""+current.getAllItemInRoom().get(index).getName()+"\"?");
+            System.out.println("\nGrab \""+currentItem.getName()+"\"?");
             System.out.println("G -> Grab");
             System.out.println("C -> Cancel");
             System.out.print("> ");
@@ -254,8 +309,8 @@ public class Player {
             response = reader.nextLine().toLowerCase().strip();
             if(response.equals("c")) return;
             else if(response.equals("g")) {
-                System.out.println("You've obtained \""+current.getAllItemInRoom().get(index).getName()+"\"?");
-                addItemIntoInventory(current.getAllItemInRoom().get(index));
+                ((Grabbable) currentItem).grabbed();
+                addItemIntoInventory(currentItem);
                 current.removeItem(index);
                 return;
             }

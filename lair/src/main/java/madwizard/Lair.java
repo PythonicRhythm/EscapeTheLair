@@ -61,12 +61,14 @@ public class Lair
      */
 
     // initializeMap() builds the preset map that is shown up by
-    // constructing rooms, items, story, and events.
+    // constructing rooms, items, story, and events. Builds the
+    // preset map room by room and item by item.
     static void initializeMap() {
+
         Room current = new Room("The double doors with his cursed insignia close behind you. An aura of magic envelopes the doors.\n" +
                                 "There is no escape. There is no other choice but to find him now.");
 
-        current.addItem(new Item("Wizard's Banner", "The banner that the wizard puts in every destroyed town in Regalia.\n"+
+        current.addItem(new LoreItem("Wizard's Banner", "The banner that the wizard puts in every destroyed town in Regalia.\n"+
                                    "His insignia is a mage casting a fireball pointed at the viewer\n"+
                                    "with a bloody razor chakram surrounding the mage. Disgusting."));
         
@@ -74,7 +76,7 @@ public class Lair
                              "you notice the dead bodies are a small regiment from the armies of Epirus. Must have been their last\n" +
                              "attempt to save their city before the Violent Slumber.");
 
-        next.addItem(new Item("Burnt Map", "The map points to a path to the east and the north. The cartographer left a note about\n" +
+        next.addItem(new LoreItem("Burnt Map", "The map points to a path to the east and the north. The cartographer left a note about\n" +
                              "a significant item to be found in the east. The rest of the map is destroyed by a fire that occurred in this hall."));
         
         current.setNorth(next);
@@ -82,30 +84,50 @@ public class Lair
 
         next.setSouth(current);
 
-        {
-            Room room = new Room("You enter a dark stained room coated in a red slime. There appears to be damaged furniture stacked\n"+
-                                      "all over room. The blockage prevents any access to the room north and west of the room. On further\n"+
-                                      "inspection, you notice a disfigured body trapped in a pile of broken tables.");
-            room.addItem(new Item("Bloody Ripped Letter", "The letter contains the seal from the royal family in Epirus. The note reads \"\n"+
-                                                            "We have gotten word tha.... wizard appears to be suffe... from Lexia. This is\n"+
-                                                            "the opportune time to end his tyranny! Send ...... to his lair and finish this."));
+        Key endingRoomKey = new Key("Glowing Key", "Runic Engravings swirl the key and you understand none of them except one. \"Raktha\" which"+
+                                    "means \"The end and the beginning are one\"", null);
+        LockedRoom end = new LockedRoom("You've entered a dank room that appears to be a closet", endingRoomKey);
+        endingRoomKey.setDestination(end);
+        next.setWest(end);
 
-            next.setNorth(room);
-            room.setSouth(next);
+        
+        Room room = new Room("You enter a dark stained room coated in a red slime. There appears to be damaged furniture stacked\n"+
+                                    "all over room. The blockage prevents any access to the room north and west of the room. On further\n"+
+                                    "inspection, you notice a disfigured body trapped in a pile of broken tables.");
+        room.addItem(new LoreItem("Bloody Ripped Letter", "The letter contains the seal from the royal family in Epirus. The note reads \"\n"+
+                                                        "We have gotten word tha.... wizard appears to be suffe... from Lexia. This is\n"+
+                                                        "the opportune time to end his tyranny! Send ...... to his lair and finish this."));
 
-            Room blockedRoom = new Room("You enter what appears to be a art gallery filled with easels, brushes, and goblets filled with\n"+
-                                        "tainted water. There is a oddly strong smell of fresh paint coming from an easel in the corner.");
-            blockedRoom.addItem(new Item("Odd Easel", "You stare into the painting and you notice it's a perfect recreation of the entrance of the lair.\n"+
-                                                        "The painting begins to stutter and emanate a bright blue light. The colors on the easel begins to\n"+
-                                                        "swirl like a whirlpool and the door to the north shuts."));
-            
-            room.setEast(blockedRoom);
-            blockedRoom.setWest(room);
-        }
+        next.setNorth(room);
+        room.setSouth(next);
 
-        next.setNorth(next);
+        Room blockedRoom = new Room("You enter what appears to be a art gallery filled with easels, brushes, and goblets filled with\n"+
+                                    "tainted water. There is a oddly strong smell of fresh paint coming from an easel in the corner.");
+        blockedRoom.addItem(new InteractableItem("Odd Easel", "You stare into the painting and you notice it's a perfect recreation of the entrance of the lair.",
+                            (Room currentRoom) -> {
+                                System.out.println("\nEvent Description:");
+                                System.out.println("The painting begins to stutter and emanate a bright blue light. The colors on the easel\n"+
+                                                    "begins to swirl like a whirlpool until it all disappears into the middle of the easel.\n"+
+                                                    "BOOOM! The door to north shuts loudly and ... slowly shifts to the match the style of the wall.\n"+
+                                                    "There is no path north now.");
+                                currentRoom.getNorth().setSouth(null);
+                                currentRoom.setNorth(null);
+                                return null;
+                            }));
+        
+        room.setEast(blockedRoom);
+        blockedRoom.setWest(room);
                 
+        Room winKeyRoom = new Room("You enter a disgusting rat-infested kitchen. A smell of rot permeates through the air and impairs your senses.\n"+
+                                   "Butchered carcasses litter the floor and wooden pottery linger the counters. Your eye catches a glow from a nearby carcass.");
+        winKeyRoom.addItem(endingRoomKey);
+        blockedRoom.setNorth(winKeyRoom);
+        winKeyRoom.setSouth(blockedRoom);
+
+        map.add(winKeyRoom);
         map.add(next);
+        map.add(room);
+        map.add(blockedRoom);
         
     }
 

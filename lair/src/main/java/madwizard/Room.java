@@ -62,14 +62,14 @@ public class Room {
         return allItemInRoom;
     }
 
-    Room() {
-        this.description = null;
-        north = null;
-        east = null;
-        south = null;
-        west = null;
-        allItemInRoom = new ArrayList<>();
-    }
+    // Room() {
+    //     this.description = null;
+    //     north = null;
+    //     east = null;
+    //     south = null;
+    //     west = null;
+    //     allItemInRoom = new ArrayList<>();
+    // }
 
     Room(String descrip) {
         this.description = descrip;
