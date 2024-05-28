@@ -82,14 +82,48 @@ public class Lair
                              "a significant item to be found in the east. The rest of the map is destroyed by a fire that occurred in this hall."));
         
         start.setNorth(next);
-        map.add(start);
 
         next.setSouth(start);
 
         // Ending room and the key needed for it.
         Key endingRoomKey = new Key("Glowing Key", "Runic Engravings swirl the key and you understand none of them except one. \"Raktha\" which\n"+
-                                    "means \"The end and the beginning are one\"", null);
-        LockedRoom end = new LockedRoom("You've entered a dank room that appears to be a closet", endingRoomKey);
+                                    "means \"The end and the beginning are one\".", null);
+        LockedRoom end = new LockedRoom("You've entered a dank room that appears to be the servant's closet. There is a fresh corpse wearing a \n"+
+                                        "tattered robe following your movement. A blueish glow emanates from a rectangular mirror on the wall.\n"+
+                                        "You start to feel an alarming sense of anxiety. There is something wrong here.", endingRoomKey);
+        end.addItem(new LoreItem("Bloody Sheet", "A sheet you found in the corpse's lap. It states \"What goes up, but never comes down?\"\n"+
+                                               "Must be another riddle? The mirror shakes as soon as you finish reading the sheet."));
+        end.addItem(new InteractableItem("The Mirror", 
+        "Blue sparkling lines swirl and disappear constantly sometimes making complete words.\n"+
+        "The mirror notices your gaze and writes \"Require\", then shortly writes \"Answer\".",
+        (Room currentRoom) -> {
+            Scanner reader = new Scanner(System.in);
+        while(true) {
+            System.out.println("\nWhat is your answer?");
+            System.out.println("C -> Cancel");
+            System.out.print("> ");
+
+            String response = reader.nextLine().toLowerCase().strip();
+            if(response.equals("age")) {
+                System.out.println("\nThe mirror shakes violently until it shatters, sending shards of glass everywhere! You hear a tumble from a corner.\n"+
+                                     "The corpse rises and shrieks \"YOU ARE TOO LATE SOLDIER ... MY DEATH HAS ARRIVED BUT MY SOUL REMAINS\". The corpse\n"+
+                                     "flies at you but a dextrous roll allowed your escape from it's grasp. The corpse's head turns and whispers\n"+
+                                     "\"The way out will open.. may you find me .. may you not. Either way, my presence will remain soldier...\"\n"+
+                                     "The western wall collapses and the red darkened sky seeps into the dusty closet. Your adventure here has ended\n"+
+                                     "but the wizard remains. Find his soul and exorcise it...");
+
+                System.out.println("\nTHE END! Thanks for playing! I hope the game will have a narrative continuation one day. It was fun!");
+                reader.close();
+                System.exit(0);
+            }
+            else if(response.equals("c"))
+                return false;
+            
+            else 
+                System.out.println("That did not work I suppose...");
+        }
+        }));
+
         endingRoomKey.setDestination(end);
         next.setWest(end);
         end.setEast(next);
@@ -122,8 +156,8 @@ public class Lair
         Room easternCorner = new Room("You walk into a very claustrophobic room with stained yellow painted walls. The paint on the\n"+
                                       "walls have been tattered by what appears to be claw marks made by a gigantic beast. You notice\n"+
                                       "an oddly shaped chest positioned perfectly in the center of the room.");
-        easternCorner.addItem(new Item("Instruction Sheet", "To open the chest of tricks, solve this riddle!\n"+
-                                                                      "\"The more you take, the more you leave behind. What am I?\""));
+        easternCorner.addItem(new LoreItem("Instruction Sheet", "To open the chest of tricks, solve this riddle!\n"+
+                                                                  "\"The more you take, the more you leave behind. What am I?\""));
         easternCorner.addItem(new InteractableItem("Odd Chest", 
         "Theres an inscription on chest itself. \"To open the lock, give the proper answer\".\n"+
         "A game in the middle of this hell? Is this a joke?", 
@@ -149,14 +183,22 @@ public class Lair
                 System.out.println("That did not work I suppose...");
         }
         }));
+
+        Room northEasternCorner = new Room("Machinations ting and pang all across the room. Silver and brass boom across the room\n"+
+                                           "These machines are one of the wizard's threats to our world. The machine seems to be flowing\n"+
+                                           "water to a nearby room.");
         
+
+        northOfCorner.setNorth(northEasternCorner);
+        northEasternCorner.setSouth(northOfCorner);
         eastOfCross.setEast(easternCorner);
         easternCorner.setWest(eastOfCross);
         northOfCorner.setSouth(easternCorner);
         easternCorner.setNorth(northOfCorner);
 
 
-        // Room that gets blocked to the north. South of the room that contains the key that wins of the game.
+        // Room that gets blocked to the north. South of the 
+        // room that contains the key that wins of the game.
         Room blockedRoom = new Room("You enter what appears to be a art gallery filled with easels, brushes, and goblets filled with\n"+
                                     "tainted water. There is a oddly strong smell of fresh paint coming from an easel in the corner.");
         blockedRoom.addItem(new InteractableItem("Odd Easel", "You stare into the painting and you notice it's a perfect recreation of the entrance of the lair.",
@@ -180,8 +222,17 @@ public class Lair
         winKeyRoom.addItem(endingRoomKey);
         blockedRoom.setNorth(winKeyRoom);
         winKeyRoom.setSouth(blockedRoom);
+        northEasternCorner.setWest(winKeyRoom);
+        winKeyRoom.setEast(northEasternCorner);
 
+        // Add all rooms to the list of rooms.
+        map.add(start);
         map.add(winKeyRoom);
+        map.add(northEasternCorner);
+        map.add(easternCorner);
+        map.add(northOfCorner);
+        map.add(eastOfCross);
+        map.add(end);
         map.add(next);
         map.add(room);
         map.add(blockedRoom);
