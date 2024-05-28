@@ -3,17 +3,20 @@ package madwizard;
 import java.util.ArrayList;
 
 /**
- * Room
+ * The Room class represents a room that a player can enter
+ * in the lair. The room contains a list of items that the 
+ * player can grab or interact with.
  */
 public class Room {
 
-    private Room north;
-    private Room east;
-    private Room south;
-    private Room west;
-    private String description;
-    private ArrayList<Item> allItemInRoom;
+    private Room north;                     // Path to north room.
+    private Room east;                      // Path to east room.
+    private Room south;                     // Path to south room.
+    private Room west;                      // Path to west room.
+    private String description;             // "Lore" description of the room.
+    private ArrayList<Item> allItemInRoom;  // ArrayList that contains all the items stored in the room.
 
+    // Getters and Setters
     public Room getNorth() {
         return north;
     }
@@ -50,21 +53,28 @@ public class Room {
         this.west = west;
     }
 
+    public ArrayList<Item> getAllItemInRoom() {
+        return allItemInRoom;
+    }
+
+    // Add item into the room. Used for when
+    // a player drops an item.
     public void addItem(Item newItem) {
         allItemInRoom.add(newItem);
     }
 
+    // Remove an item from the room. Used for
+    // when an item is grabbed by the player.
     public void removeItem(int index) {
         allItemInRoom.remove(index);
     }
 
+    // Remove an item from the room. Used for
+    // when an item is grabbed by the player.
     public void removeItem(Item i) {
         allItemInRoom.remove(i);
     }
 
-    public ArrayList<Item> getAllItemInRoom() {
-        return allItemInRoom;
-    }
 
     Room(String descrip) {
         this.description = descrip;
@@ -75,6 +85,7 @@ public class Room {
         allItemInRoom = new ArrayList<>();
     }
 
+    // Used to turn a locked room into an unlocked room.
     Room(LockedRoom unlocked) {
         description = unlocked.getDescription();
         north = unlocked.getNorth();
@@ -87,6 +98,8 @@ public class Room {
         }
     }
 
+    // printArea() will print the paths that the room
+    // contains to other rooms in a box visual representation.
     public void printArea() {
 
         System.out.println("-------");

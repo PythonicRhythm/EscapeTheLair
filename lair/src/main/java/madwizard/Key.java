@@ -1,5 +1,12 @@
 package madwizard;
 
+/*
+ * The Key class represents a key that unlocks a room
+ * in the lair. An instance of a key stores a 'destination'
+ * room that the key will unlock. The key can be grabbed
+ * and stored in the pouch of the player.
+ */
+
 public class Key extends Item implements Grabbable {
 
     Room destination;

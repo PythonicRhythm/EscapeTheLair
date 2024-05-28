@@ -5,6 +5,16 @@ import java.util.Scanner;
 
 import madwizard.Lair.Direction;
 
+/*
+ * The Player class simulates the actions that the
+ * player can take while they traverse through the lair.
+ * The player can grab and interact with items,
+ * Store the item in their pouch/inventory,
+ * move between unlocked rooms throughout the lair,
+ * unlock rooms if they have obtained the proper key,
+ * and drop items from their pouch. 
+ */
+
 public class Player {
 
     ArrayList<Item> inventory = new ArrayList<>();
@@ -32,6 +42,9 @@ public class Player {
         inventory.remove(index);
     }
 
+    // tryToUnlockRoom() will attempt to unlock the room that
+    // is sent as an argument using every key in the player's
+    // inventory.
     public Room tryToUnlockRoom(LockedRoom roomToUnlock) {
         for(Item i: inventory) {
             if(i instanceof Key) {
@@ -361,9 +374,9 @@ public class Player {
         
     }
 
-    // inspectRoom() will print a map of the room
-    // and mention all the interactable items the
-    // player has noticed. 
+    // inspectRoom() will print a map of the room and
+    // mention all the interactable/grabbable items the
+    // player has noticed in the given room. 
     public void inspectRoom(Room current) {
 
         System.out.println("\nROOM MAP: Arrows point to direction of doors in this room.");

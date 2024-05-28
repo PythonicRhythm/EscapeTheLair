@@ -239,7 +239,7 @@ public class Lair
         
     }
 
-    public static void main(String[] args) {
+    public static void run() {
 
         Scanner reader = new Scanner(System.in);
         System.out.println("\nYou have entered the lair of the mad wizard who has caused pain and suffering\n" +
