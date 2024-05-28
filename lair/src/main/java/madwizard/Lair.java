@@ -65,13 +65,15 @@ public class Lair
     // preset map room by room and item by item.
     static void initializeMap() {
 
-        Room current = new Room("The double doors with his cursed insignia close behind you. An aura of magic envelopes the doors.\n" +
+        // Entrance room.
+        Room start = new Room("The double doors with his cursed insignia close behind you. An aura of magic envelopes the doors.\n" +
                                 "There is no escape. There is no other choice but to find him now.");
 
-        current.addItem(new LoreItem("Wizard's Banner", "The banner that the wizard puts in every destroyed town in Regalia.\n"+
+        start.addItem(new LoreItem("Wizard's Banner", "The banner that the wizard puts in every destroyed town in Regalia.\n"+
                                    "His insignia is a mage casting a fireball pointed at the viewer\n"+
                                    "with a bloody razor chakram surrounding the mage. Disgusting."));
         
+        // Crossroads room.
         Room next = new Room("You entered a putrid charred hall covered in old decayed bodies. The smell is getting worse. On a second look,\n" +
                              "you notice the dead bodies are a small regiment from the armies of Epirus. Must have been their last\n" +
                              "attempt to save their city before the Violent Slumber.");
@@ -79,11 +81,12 @@ public class Lair
         next.addItem(new LoreItem("Burnt Map", "The map points to a path to the east and the north. The cartographer left a note about\n" +
                              "a significant item to be found in the east. The rest of the map is destroyed by a fire that occurred in this hall."));
         
-        current.setNorth(next);
-        map.add(current);
+        start.setNorth(next);
+        map.add(start);
 
-        next.setSouth(current);
+        next.setSouth(start);
 
+        // Ending room and the key needed for it.
         Key endingRoomKey = new Key("Glowing Key", "Runic Engravings swirl the key and you understand none of them except one. \"Raktha\" which\n"+
                                     "means \"The end and the beginning are one\"", null);
         LockedRoom end = new LockedRoom("You've entered a dank room that appears to be a closet", endingRoomKey);
@@ -102,6 +105,58 @@ public class Lair
         next.setNorth(room);
         room.setSouth(next);
 
+        // Room to the east of the crossroads.
+        Room eastOfCross = new Room("You enter a ridiculously long empty hall with what seems to be a door far to the east. Scattered\n"+
+                                    "royal banners are present on the walls. You notice these banners are of the families that aligned\n"+
+                                    "with the treacherous wizard. Regel, Nimore, Manithem, ... they were all slaughtered.");
+        next.setEast(eastOfCross);
+        eastOfCross.setWest(next);
+
+        // Locked room that can be opened allowing an alternate path
+        // to the winning key item.
+        LockedRoom northOfCorner = new LockedRoom("A pitch black hallway with a light protuding from the door to the north.\n"+
+                                                  "You observe only darkness... it seems to be sorcery.", null);
+
+        // Room to the southeast part of the map. Contains a riddle that spawns a key
+        // which will open the locked room to the north.
+        Room easternCorner = new Room("You walk into a very claustrophobic room with stained yellow painted walls. The paint on the\n"+
+                                      "walls have been tattered by what appears to be claw marks made by a gigantic beast. You notice\n"+
+                                      "an oddly shaped chest positioned perfectly in the center of the room.");
+        easternCorner.addItem(new Item("Instruction Sheet", "To open the chest of tricks, solve this riddle!\n"+
+                                                                      "\"The more you take, the more you leave behind. What am I?\""));
+        easternCorner.addItem(new InteractableItem("Odd Chest", 
+        "Theres an inscription on chest itself. \"To open the lock, give the proper answer\".\n"+
+        "A game in the middle of this hell? Is this a joke?", 
+        (Room currentRoom) -> {
+        Scanner reader = new Scanner(System.in);
+        while(true) {
+            System.out.println("\nWhat is your response?");
+            System.out.println("C -> Cancel");
+            System.out.print("> ");
+
+            String response = reader.nextLine().toLowerCase().strip();
+            if(response.equals("footsteps")) {
+                System.out.println("An item has popped out of the chest!");
+                Key northernKey = new Key("Chipped Key", "A key that jumped from the chest of tricks.", northOfCorner);
+                northOfCorner.setToOpenLock(northernKey);
+                currentRoom.addItem(northernKey);
+                return true;
+            }
+            else if(response.equals("c"))
+                return false;
+            
+            else 
+                System.out.println("That did not work I suppose...");
+        }
+        }));
+        
+        eastOfCross.setEast(easternCorner);
+        easternCorner.setWest(eastOfCross);
+        northOfCorner.setSouth(easternCorner);
+        easternCorner.setNorth(northOfCorner);
+
+
+        // Room that gets blocked to the north. South of the room that contains the key that wins of the game.
         Room blockedRoom = new Room("You enter what appears to be a art gallery filled with easels, brushes, and goblets filled with\n"+
                                     "tainted water. There is a oddly strong smell of fresh paint coming from an easel in the corner.");
         blockedRoom.addItem(new InteractableItem("Odd Easel", "You stare into the painting and you notice it's a perfect recreation of the entrance of the lair.",
@@ -113,12 +168,13 @@ public class Lair
                                                     "There is no path north now.");
                                 currentRoom.getNorth().setSouth(null);
                                 currentRoom.setNorth(null);
-                                return null;
+                                return true;
                             }));
         
         room.setEast(blockedRoom);
         blockedRoom.setWest(room);
-                
+        
+        // Room that contains the key that wins the game.
         Room winKeyRoom = new Room("You enter a disgusting rat-infested kitchen. A smell of rot permeates through the air and impairs your senses.\n"+
                                    "Butchered carcasses litter the floor and wooden pottery linger the counters. Your eye catches a glow from a nearby carcass.");
         winKeyRoom.addItem(endingRoomKey);

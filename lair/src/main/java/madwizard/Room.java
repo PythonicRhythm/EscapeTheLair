@@ -58,6 +58,10 @@ public class Room {
         allItemInRoom.remove(index);
     }
 
+    public void removeItem(Item i) {
+        allItemInRoom.remove(i);
+    }
+
     public ArrayList<Item> getAllItemInRoom() {
         return allItemInRoom;
     }

@@ -12,4 +12,8 @@ public class LockedRoom extends Room {
     public Key getToOpenLock() {
         return toOpenLock;
     }
+
+    public void setToOpenLock(Key toOpenLock) {
+        this.toOpenLock = toOpenLock;
+    }
 }

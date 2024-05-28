@@ -318,8 +318,8 @@ public class Player {
             response = reader.nextLine().toLowerCase().strip();
             if(response.equals("c")) return;
             else if(response.equals("i")) {
-                ((Interactable) currentItem).interactedWith(current);
-                current.removeItem(index);
+                if(((Interactable) currentItem).interactedWith(current))
+                    current.removeItem(index);
                 return;
             }
             else

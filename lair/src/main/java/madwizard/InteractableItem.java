@@ -12,7 +12,7 @@ public class InteractableItem extends Item implements Interactable{
     }
 
     @Override
-    public void interactedWith(Room current) {
-        onInteraction.apply(current);
+    public boolean interactedWith(Room current) {
+        return (boolean) onInteraction.apply(current);
     }
 }
