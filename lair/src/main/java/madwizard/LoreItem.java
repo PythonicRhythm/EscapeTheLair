@@ -8,6 +8,6 @@ public class LoreItem extends Item implements Grabbable {
 
     @Override
     public void grabbed() {
-        System.out.println("You've obtained \"" + getName() + "\"?");
+        System.out.println("\nYou've obtained \"" + getName() + "\"?");
     }
 }

@@ -62,15 +62,6 @@ public class Room {
         return allItemInRoom;
     }
 
-    // Room() {
-    //     this.description = null;
-    //     north = null;
-    //     east = null;
-    //     south = null;
-    //     west = null;
-    //     allItemInRoom = new ArrayList<>();
-    // }
-
     Room(String descrip) {
         this.description = descrip;
         north = null;
@@ -78,6 +69,18 @@ public class Room {
         south = null;
         west = null;
         allItemInRoom = new ArrayList<>();
+    }
+
+    Room(LockedRoom unlocked) {
+        description = unlocked.getDescription();
+        north = unlocked.getNorth();
+        east = unlocked.getEast();
+        south = unlocked.getSouth();
+        west = unlocked.getWest();
+        allItemInRoom = new ArrayList<>();
+        for(Item i: unlocked.getAllItemInRoom()) {
+            allItemInRoom.add(i);
+        }
     }
 
     public void printArea() {

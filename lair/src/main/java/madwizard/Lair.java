@@ -51,8 +51,8 @@ public class Lair
      *   end        v    v
      *    |         ^    ^
      *    |    X >< X    X
-     *    v    v    v    v
-     *         ^    ^    ^
+     *    v    v         v
+     *         ^         ^
      *    X << X >< X >< X
      *         v         
      *         ^
@@ -84,11 +84,12 @@ public class Lair
 
         next.setSouth(current);
 
-        Key endingRoomKey = new Key("Glowing Key", "Runic Engravings swirl the key and you understand none of them except one. \"Raktha\" which"+
+        Key endingRoomKey = new Key("Glowing Key", "Runic Engravings swirl the key and you understand none of them except one. \"Raktha\" which\n"+
                                     "means \"The end and the beginning are one\"", null);
         LockedRoom end = new LockedRoom("You've entered a dank room that appears to be a closet", endingRoomKey);
         endingRoomKey.setDestination(end);
         next.setWest(end);
+        end.setEast(next);
 
         
         Room room = new Room("You enter a dark stained room coated in a red slime. There appears to be damaged furniture stacked\n"+

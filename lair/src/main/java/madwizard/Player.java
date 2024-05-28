@@ -31,6 +31,20 @@ public class Player {
         }
         inventory.remove(index);
     }
+
+    public Room tryToUnlockRoom(LockedRoom roomToUnlock) {
+        for(Item i: inventory) {
+            if(i instanceof Key) {
+                Key possibleKeyToDoor = ((Key) i);
+                if(possibleKeyToDoor.getDestination() == roomToUnlock) {
+                    System.out.println("Used \""+i.getName()+"\" to unlock the door!");
+                    return new Room(roomToUnlock);
+                } 
+            }
+        }
+
+        return null;
+    }
     
     // tryDirection() trys out a direction given by the player.
     // If its a valid move, return the room that the user requested,
@@ -38,6 +52,7 @@ public class Player {
     // else it returns the room the player is currently in and prints
     // a message mentioning either a missing door or locked room.
     public Room tryDirection(Room start, Direction direction) {
+        System.out.println();
         switch(direction) {
             case NORTH:
                 if(start.getNorth() == null) { 
@@ -45,8 +60,14 @@ public class Player {
                     return start;
                 }
                 else if(start.getNorth() instanceof LockedRoom) {
-                    System.out.println("The room is locked! Maybe there is a key?");
-                    return start;
+                    if(tryToUnlockRoom((LockedRoom) start.getNorth()) == null) {
+                        System.out.println("The room is locked! Maybe there is a key?");
+                        return start;
+                    }
+                    else {
+                        System.out.println("You proceed to the now unlocked northern room...");
+                        return start.getNorth();
+                    }
                 }
                 else {
                     System.out.println("You proceed to the northern room...");
@@ -58,8 +79,14 @@ public class Player {
                     return start;
                 }
                 else if(start.getEast() instanceof LockedRoom) {
-                    System.out.println("The room is locked! Maybe there is a key?");
-                    return start;
+                    if(tryToUnlockRoom((LockedRoom) start.getEast()) == null) {
+                        System.out.println("The room is locked! Maybe there is a key?");
+                        return start;
+                    }
+                    else {
+                        System.out.println("You proceed to the now unlocked eastern room...");
+                        return start.getEast();
+                    }
                 }
                 else {
                     System.out.println("You proceed to the eastern room...");
@@ -71,8 +98,14 @@ public class Player {
                     return start;
                 }
                 else if(start.getSouth() instanceof LockedRoom) {
-                    System.out.println("The room is locked! Maybe there is a key?");
-                    return start;
+                    if(tryToUnlockRoom((LockedRoom) start.getSouth()) == null) {
+                        System.out.println("The room is locked! Maybe there is a key?");
+                        return start;
+                    }
+                    else {
+                        System.out.println("You proceed to the now unlocked southern room...");
+                        return start.getSouth();
+                    }
                 }
                 else {
                     System.out.println("You proceed to the southern room...");
@@ -84,8 +117,14 @@ public class Player {
                     return start;
                 }
                 else if(start.getWest() instanceof LockedRoom) {
-                    System.out.println("The room is locked! Maybe there is a key?");
-                    return start;
+                    if(tryToUnlockRoom((LockedRoom) start.getWest()) == null) {
+                        System.out.println("The room is locked! Maybe there is a key?");
+                        return start;
+                    }
+                    else {
+                        System.out.println("You proceed to the now unlocked west room...");
+                        return start.getWest();
+                    }
                 }
                 else {
                     System.out.println("You proceed to the western room...");
@@ -197,6 +236,7 @@ public class Player {
             response = reader.nextLine().toLowerCase().strip();
             if(response.equals("c")) return;
             else if(response.equals("d")) {
+                System.out.println();
                 System.out.println("You've dropped \""+inventory.get(index).getName()+"\"?");
                 current.addItem(inventory.get(index));
                 removeItem(index);
